@@ -3,6 +3,7 @@ import SearchTask from "./card/SearchTask";
 import TaskActions from "./card/TaskActions";
 import TaskList from "./card/TaskList";
 import AddTaskModal from "./card/AddTaskModal";
+import NoTaskFound from "./NoTaskFound";
 
 export default function TaskBoard() {
   const defaultTask = {
@@ -67,7 +68,7 @@ export default function TaskBoard() {
       task.title.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
-    setTasks([...filtered])
+    setTasks([...filtered]);
   };
 
   return (
@@ -93,12 +94,17 @@ export default function TaskBoard() {
             {/* task action end */}
 
             {/* task list start */}
-            <TaskList
-              tasks={tasks}
-              onEdit={handleEditTask}
-              onDelete={handleDelete}
-              onFav={handleFavIcon}
-            ></TaskList>
+            {tasks.length > 0 ? (
+              <TaskList
+                tasks={tasks}
+                onEdit={handleEditTask}
+                onDelete={handleDelete}
+                onFav={handleFavIcon}
+              ></TaskList>
+            ) : (
+              <NoTaskFound></NoTaskFound>
+            )}
+
             {/* task list end */}
           </div>
         </div>
