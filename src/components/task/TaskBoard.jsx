@@ -40,23 +40,65 @@ export default function TaskBoard() {
     setShowAddModal(true);
   };
 
+  const handleCloseClick = () => {
+    setShowAddModal(false);
+    setTaskToUpdate(null);
+  };
+
+  const handleDelete = (id) => {
+    const afterDelete = tasks.filter((task) => task.id !== id);
+    setTasks(afterDelete);
+  };
+
+  const handleDeleteAll = () => {
+    tasks.length = 0;
+    setTasks([...tasks]);
+  };
+
+  const handleFavIcon = (taskId) => {
+    const taskIndex = tasks.findIndex((task) => task.id === taskId);
+    const newTasks = [...tasks];
+    newTasks[taskIndex].isFavorite = !newTasks[taskIndex].isFavorite;
+    setTasks(newTasks);
+  };
+
+  const handleSearch = (searchTerm) => {
+    const filtered = tasks.filter((task) =>
+      task.title.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    setTasks([...filtered])
+  };
+
   return (
     <div>
       {showAddModal && (
-        <AddTaskModal onSave={handleAddTask} taskToUpdate={taskToUpdate}></AddTaskModal>
+        <AddTaskModal
+          onCloseClick={handleCloseClick}
+          onSave={handleAddTask}
+          taskToUpdate={taskToUpdate}
+        ></AddTaskModal>
       )}
       <section className="mb-20 lg:px-20" id="tasks">
         <div className="container">
           {/* Search Box */}
-          <SearchTask></SearchTask>
+          <SearchTask onSearch={handleSearch}></SearchTask>
           {/* Search Box Ends */}
           <div className="rounded-xl border border-[rgba(206,206,206,0.12)] bg-[#1D212B] px-6 py-8 md:px-9 md:py-16">
             {/* task action start */}
-            <TaskActions onAddClick={() => setShowAddModal(true)}></TaskActions>
+            <TaskActions
+              onAddClick={() => setShowAddModal(true)}
+              onDeleteAllClick={handleDeleteAll}
+            ></TaskActions>
             {/* task action end */}
 
             {/* task list start */}
-            <TaskList tasks={tasks} onEdit={handleEditTask}></TaskList>
+            <TaskList
+              tasks={tasks}
+              onEdit={handleEditTask}
+              onDelete={handleDelete}
+              onFav={handleFavIcon}
+            ></TaskList>
             {/* task list end */}
           </div>
         </div>
